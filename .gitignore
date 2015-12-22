@@ -1,0 +1,12 @@
+# Binary files/caches
+*.bin
+*.img
+*.vhd
+tools/ext4-swap-boot-inode
+__pycache__
+
+# Kate files
+.kateproject.d
+
+# Local configuration
+tests/config.py
