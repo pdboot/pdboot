@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from ..bochs import Bochs, extract_dl, extract_cs, extract_rip, extract_screen_contents
+from ..bochs import Bochs, extract_screen_contents
 from ..utils import delete_if_exists
 import re
 
@@ -46,11 +46,10 @@ def _test_boot_partition(partition, optrom = None):
     table_entry = f.read()
   with open(vbr_path, 'rb') as f:
     vbr = f.read()
-  split = output.split()
-  dl_before = extract_dl(split[3])
-  dl_after = extract_dl(split[5])
-  rip_after = extract_rip(split[5])
-  cs_after = extract_cs(split[6])
+  dl_before = output[3].dl()
+  dl_after = output[5].dl()
+  rip_after = output[5].rip()
+  cs_after = output[6].cs()
 
   # Assertions
   assert dl_after == dl_before

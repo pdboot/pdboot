@@ -9,9 +9,8 @@ import os
 import re
 import subprocess
 import tempfile
-import threading
 
-__all__ = ['Bochs', 'extract_dl', 'extract_cs', 'extract_rip', 'extract_screen_contents']
+__all__ = ['Bochs', 'extract_screen_contents']
 
 def extract_dl(output):
   return re.search('rdx: [0-9a-f]{8}_[0-9a-f]{6}([0-9a-f]{2})\s', output).group(1)
@@ -50,13 +49,27 @@ def format_iter(iter):
 def format_tuple(key, value):
   return format(key) + '=' + format(value)
 
+class BochsCommandOutput:
+  def __init__(self, output):
+    self._output = output
+
+  def dl(self):
+    return extract_dl(self._output)
+
+  def rip(self):
+    return extract_rip(self._output)
+
+  def cs(self):
+    return extract_cs(self._output)
+
 class BochsOutput:
   def __init__(self, stdout, stderr):
     self.stdout = stdout
     self.stderr = stderr
+    self._split = re.split('<bochs:\d+>', stdout)
 
-  def split(self):
-    return re.split('<bochs:\d+>', self.stdout)
+  def __getitem__(self, i):
+    return BochsCommandOutput(self._split[i])
 
 class Bochs:
   def __init__(self, log = None, hdd = None, boot = None, bochs = None, optrom = None):
