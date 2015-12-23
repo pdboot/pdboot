@@ -47,14 +47,13 @@ def _test_boot_partition(partition, optrom = None):
   with open(vbr_path, 'rb') as f:
     vbr = f.read()
   dl_before = output[3].regs.dl
-  dl_after = output[5].regs.dl
-  rip_after = output[5].regs.rip
-  cs_after = output[6].sregs.cs
+  regs = output[5].regs
+  sregs = output[6].sregs
 
   # Assertions
-  assert dl_after == dl_before
-  assert rip_after == 0x7c00
-  assert cs_after == 0x0000
+  assert regs.dl == dl_before
+  assert regs.rip == 0x7c00
+  assert sregs.cs == 0x0000
   assert table_entry == image[table_offset:table_offset+16]
   assert vbr == image[partition_offset:partition_offset+512]
 
