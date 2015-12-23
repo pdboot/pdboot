@@ -76,6 +76,7 @@ mov bp,invalid_vbr
 jnz fatal_error
 
 ; Jump to the volume boot record
+mov bp,si           ; ds:bp is sometimes used by Windows instead of ds:si
 jmp 0x0000:0x7c00   ; if boot signature passes, we can jump,
                     ; as ds:si and dl are already set
 

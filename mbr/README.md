@@ -12,7 +12,7 @@ This is a standard MBR, which loads the VBR of the active partition to 0x7c00 an
 * If loading was successful
   - VBR is loaded to the physical addres 0x7c00
   - dl contains the disk ID the system was booted from
-  - ds:si points to the partition entry the VBR was loaded from
+  - ds:si and ds:bp point to the partition entry the VBR was loaded from
 
 * If loading was unsuccessful
   - Error message is displayed on screen
