@@ -105,8 +105,8 @@ def test_boot_data():
   lba_start, lba_length, uuid_low, uuid_high = struct.unpack_from('<QQQQ', boot_data)
   disk_id = struct.unpack_from('B', boot_data, 32)[0]
 
-  dl_before = int(output[4].dl(), 16)
-  rip = output[7].rip()
+  dl_before = int(output[4].regs.dl, 16)
+  rip = output[7].regs.rip
   cs = output[8].cs()
 
   uuid = struct.unpack_from('<QQ', image, SUPERBLOCK_OFFSET + UUID_OFFSET)

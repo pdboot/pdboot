@@ -12,12 +12,6 @@ import tempfile
 
 __all__ = ['Bochs', 'extract_screen_contents']
 
-def extract_dl(output):
-  return re.search('rdx: [0-9a-f]{8}_[0-9a-f]{6}([0-9a-f]{2})\s', output).group(1)
-
-def extract_rip(output):
-  return re.search('rip: ([0-9a-f]{8}_[0-9a-f]{8})\s', output).group(1)
-
 def extract_cs(output):
   return re.search('cs:0x([0-9a-f]{4}),', output).group(1)
 
@@ -49,15 +43,36 @@ def format_iter(iter):
 def format_tuple(key, value):
   return format(key) + '=' + format(value)
 
+reg64 = ['rax', 'rbx', 'rcx', 'rdx', 'rsp', 'rbp', 'rsi', 'rdi', 'r8', 'r9', 'r10', 'r11', 'r12', 'r13', 'r14', 'r15', 'rip']
+reg32 = ['eax', 'ebx', 'ecx', 'edx', 'esp', 'ebp', 'esi', 'edi', 'r8d', 'r9d', 'r10d', 'r11d', 'r12d', 'r13d', 'r14d', 'r15d', 'eip']
+reg16 = ['ax', 'bx', 'cx', 'dx', 'sp', 'bp', 'si', 'di', 'r8w', 'r9w', 'r10w', 'r11w', 'r12w', 'r13w', 'r14w', 'r15w', 'ip']
+reg8  = ['al', 'bl', 'cl', 'dl', 'spl', 'bpl', 'sil', 'dil', 'r8b', 'r9b', 'r10b', 'r11b', 'r12b', 'r13b', 'r14b', 'r15b']
+reg8h = ['ah', 'bh', 'ch', 'dh']
+
+class Regs:
+  def __init__(self, output):
+    for reg in reg64:
+      match = re.search(reg + '\s?: ([0-9a-f]{8}_[0-9a-f]{8})\s', output)
+      setattr(self, reg, match.group(1))
+
+  def __getattr__(self, reg):
+    if reg in reg32:
+      return getattr(self, reg64[reg32.index(reg)])[-8:]
+    if reg in reg16:
+      return getattr(self, reg64[reg16.index(reg)])[-4:]
+    if reg in reg8:
+      return getattr(self, reg64[reg8.index(reg)])[-2:]
+    if reg in reg8h:
+      return getattr(self, reg64[reg8h.index(reg)])[-4:-2]
+    raise AttributeError("'" + reg + "' is not a valid register")
+
 class BochsCommandOutput:
   def __init__(self, output):
     self._output = output
 
-  def dl(self):
-    return extract_dl(self._output)
-
-  def rip(self):
-    return extract_rip(self._output)
+  @property
+  def regs(self):
+    return Regs(self._output)
 
   def cs(self):
     return extract_cs(self._output)

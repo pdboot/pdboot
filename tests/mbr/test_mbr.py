@@ -46,9 +46,9 @@ def _test_boot_partition(partition, optrom = None):
     table_entry = f.read()
   with open(vbr_path, 'rb') as f:
     vbr = f.read()
-  dl_before = output[3].dl()
-  dl_after = output[5].dl()
-  rip_after = output[5].rip()
+  dl_before = output[3].regs.dl
+  dl_after = output[5].regs.dl
+  rip_after = output[5].regs.rip
   cs_after = output[6].cs()
 
   # Assertions
