@@ -52,18 +52,21 @@ reg8h = ['ah', 'bh', 'ch', 'dh']
 class Regs:
   def __init__(self, output):
     for reg in reg64:
-      match = re.search(reg + '\s?: ([0-9a-f]{8}_[0-9a-f]{8})\s', output)
-      setattr(self, reg, match.group(1))
+      match = re.search(reg + '\s?: ([0-9a-f]{8})_([0-9a-f]{8})\s', output)
+      high = int(match.group(1), 16)
+      low = int(match.group(2), 16)
+      val = (high << 32) + low
+      setattr(self, reg, val)
 
   def __getattr__(self, reg):
     if reg in reg32:
-      return getattr(self, reg64[reg32.index(reg)])[-8:]
+      return getattr(self, reg64[reg32.index(reg)]) & 0xffffffff
     if reg in reg16:
-      return getattr(self, reg64[reg16.index(reg)])[-4:]
+      return getattr(self, reg64[reg16.index(reg)]) & 0xffff
     if reg in reg8:
-      return getattr(self, reg64[reg8.index(reg)])[-2:]
+      return getattr(self, reg64[reg8.index(reg)]) & 0xff
     if reg in reg8h:
-      return getattr(self, reg64[reg8h.index(reg)])[-4:-2]
+      return (getattr(self, reg64[reg8h.index(reg)]) & 0xff00) >> 8
     raise AttributeError("'" + reg + "' is not a valid register")
 
 sregs = ['cs', 'ds', 'es', 'fs', 'gs', 'ss']
@@ -72,7 +75,7 @@ class SRegs:
   def __init__(self, output):
     for sreg in sregs:
       match = re.search(sreg + ':0x([0-9a-f]{4}),', output)
-      setattr(self, sreg, match.group(1))
+      setattr(self, sreg, int(match.group(1), 16))
 
 class BochsCommandOutput:
   def __init__(self, output):

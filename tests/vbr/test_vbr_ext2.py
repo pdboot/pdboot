@@ -105,7 +105,7 @@ def test_boot_data():
   lba_start, lba_length, uuid_low, uuid_high = struct.unpack_from('<QQQQ', boot_data)
   disk_id = struct.unpack_from('B', boot_data, 32)[0]
 
-  dl_before = int(output[4].regs.dl, 16)
+  dl_before = output[4].regs.dl
   rip = output[7].regs.rip
   cs = output[8].sregs.cs
 
@@ -116,8 +116,8 @@ def test_boot_data():
   assert lba_start == 8
   assert lba_length == 1000
   assert disk_id == dl_before
-  assert rip == '00000000_00002000'
-  assert cs == '0000'
+  assert rip == 0x2000
+  assert cs == 0x0000
   assert uuid_low == uuid[0]
   assert uuid_high == uuid[1]
 

@@ -53,8 +53,8 @@ def _test_boot_partition(partition, optrom = None):
 
   # Assertions
   assert dl_after == dl_before
-  assert rip_after == '00000000_00007c00'
-  assert cs_after == '0000'
+  assert rip_after == 0x7c00
+  assert cs_after == 0x0000
   assert table_entry == image[table_offset:table_offset+16]
   assert vbr == image[partition_offset:partition_offset+512]
 
