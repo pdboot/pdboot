@@ -66,6 +66,14 @@ class Regs:
       return getattr(self, reg64[reg8h.index(reg)])[-4:-2]
     raise AttributeError("'" + reg + "' is not a valid register")
 
+sregs = ['cs', 'ds', 'es', 'fs', 'gs', 'ss']
+
+class SRegs:
+  def __init__(self, output):
+    for sreg in sregs:
+      match = re.search(sreg + ':0x([0-9a-f]{4}),', output)
+      setattr(self, sreg, match.group(1))
+
 class BochsCommandOutput:
   def __init__(self, output):
     self._output = output
@@ -74,8 +82,9 @@ class BochsCommandOutput:
   def regs(self):
     return Regs(self._output)
 
-  def cs(self):
-    return extract_cs(self._output)
+  @property
+  def sregs(self):
+    return SRegs(self._output)
 
 class BochsOutput:
   def __init__(self, stdout, stderr):

@@ -107,7 +107,7 @@ def test_boot_data():
 
   dl_before = int(output[4].regs.dl, 16)
   rip = output[7].regs.rip
-  cs = output[8].cs()
+  cs = output[8].sregs.cs
 
   uuid = struct.unpack_from('<QQ', image, SUPERBLOCK_OFFSET + UUID_OFFSET)
 

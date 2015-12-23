@@ -49,7 +49,7 @@ def _test_boot_partition(partition, optrom = None):
   dl_before = output[3].regs.dl
   dl_after = output[5].regs.dl
   rip_after = output[5].regs.rip
-  cs_after = output[6].cs()
+  cs_after = output[6].sregs.cs
 
   # Assertions
   assert dl_after == dl_before
