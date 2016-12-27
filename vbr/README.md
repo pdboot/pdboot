@@ -21,6 +21,8 @@ struct boot_data {
   char disk_id;        // BIOS disk ID the partition is on
 };
 ```
+  - cs, ds, es, fs, gs and ss are all 0x0000
+  - ip = 0x2000
 
 * If loading was unsuccessful
   - Error message is displayed on screen

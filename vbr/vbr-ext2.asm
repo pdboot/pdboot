@@ -11,6 +11,7 @@ mov ax,(temp_base - base) >> 4
 mov fs,ax
 xor ax,ax
 mov es,ax
+mov gs,ax
 mov ss,ax
 mov sp,temp_base   ; temporary stack below VBR
 cld
