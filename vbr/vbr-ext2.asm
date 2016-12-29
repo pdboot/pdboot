@@ -285,6 +285,7 @@ call read_sectors_to_di
 ; Check the file mode
 mov bp,missing_bootloader
 mov ax,word[inode_table + si + inode.mode]
+and ax,0xf000 ; only check file type, not permissions
 cmp ax,0x8000 ; regular file
 jnz fatal_error
 
