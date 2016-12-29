@@ -207,6 +207,13 @@ def test_bootloader_not_a_regular_file():
   struct.pack_into('<H', image, INODE_OFFSET, BLOCK_DEVICE)
   _test('test_bootloader_not_a_regular_file', BOOTLOADER_ERROR, base_image = image)
 
+def test_bootloader_with_permissions_set():
+  REGULAR_FILE_WITH_ALL_PERMISSIONS = 0x8fff
+  image = bytearray(base_simple)
+  assert struct.unpack_from('<H', image, INODE_OFFSET)[0] == 0x8000
+  struct.pack_into('<H', image, INODE_OFFSET, REGULAR_FILE_WITH_ALL_PERMISSIONS)
+  _test('test_bootloader_with_permissions_set', STAGE2_MESSAGE, base_image = image)
+
 def test_bootloader_missing():
   image = bytearray(base_simple)
   assert struct.unpack_from('<H', image, INODE_OFFSET)[0] == 0x8000
