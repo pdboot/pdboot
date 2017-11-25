@@ -33,7 +33,7 @@ that pdboot tests use, so you will need to compile Bochs yourself. This configur
 with pdboot tests:
 
 ```
-LIBS=-lpthread ./configure --enable-x86-64 --enable-smp --enable-all-optimizations --enable-vmx=2 --enable-svm --enable-avx --enable-evex --enable-pcidev --enable-usb --enable-usb-ohci --enable-ne2000 --enable-pnic --enable-e1000 --enable-debugger --disable-debugger-gui --with-nogui --without-x11
+LIBS=-lpthread ./configure --enable-x86-64 --enable-smp --enable-all-optimizations --enable-vmx=2 --enable-svm --enable-avx --enable-evex --enable-usb --enable-usb-ohci --enable-ne2000 --enable-pnic --enable-e1000 --enable-debugger --disable-debugger-gui --with-nogui --without-x11
 make
 ```
 
